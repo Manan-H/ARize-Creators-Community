@@ -226,6 +226,20 @@
   });
 })(jQuery);
 
-$(window).scroll(function () {
-  $(".mainmenu-area").toggleClass('scrolled', $(this).scrollTop() > 50);
+if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+  $(window).scroll(function () {
+    $(".mainmenu-area").toggleClass('scrolled', $(this).scrollTop() > 50);
+  });
+} else {
+  $(".mainmenu-area").addClass('scrolled');
+}
+
+
+// Artists list expand
+$(function () {
+  $(".creatorCard").slice(0, 4).show();
+  $("#load").click(function (e) {
+    e.preventDefault();
+    $(".creatorCard:hidden").slice(0, 4).show();
+  });
 });
