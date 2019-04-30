@@ -235,11 +235,302 @@ if (window.location.pathname === "/" || window.location.pathname === "/index.htm
 }
 
 
-// Artists list expand
-$(function () {
-  $(".creatorCard").slice(0, 4).show();
-  $("#load").click(function (e) {
-    e.preventDefault();
-    $(".creatorCard:hidden").slice(0, 4).show();
+
+//Profile Slider
+
+(function () {
+  $('#carousel-item').carousel({
+    interval: 6000
   });
-});
+}());
+
+
+(function () {
+  $('.carousel-multiItem  .item').each(function () {
+    var itemToClone = $(this);
+    /*
+    .....number  of item show  in slide  !
+    */
+    for (var i = 1; i < 3; i++) {
+      /* 
+        ..... go to the  next  item  in curasol 
+      */
+      itemToClone = itemToClone.next();
+
+
+      if (!itemToClone.length) {
+        itemToClone = $(this).siblings(':first');
+      }
+
+
+      itemToClone.children(':first-child').clone()
+        .addClass("cloneditem-" + (i))
+        .appendTo($(this));
+
+      $(".carousel-multiItem ").find(".item").css("transition", "   500ms ease-in-out all  ").css("transition", "  500ms ease-in-out all").css("backface-visibility", "visible").css("transform", "none!important")
+
+    }
+  });
+}());
+
+
+
+///////Artworks modal
+
+let modalId = $('#image-gallery');
+
+$(document)
+  .ready(function () {
+
+    loadGallery(true, 'a.thumbnail');
+
+    //This function disables buttons when needed
+    function disableButtons(counter_max, counter_current) {
+      $('#show-previous-image, #show-next-image')
+        .show();
+      if (counter_max === counter_current) {
+        $('#show-next-image')
+          .hide();
+      } else if (counter_current === 1) {
+        $('#show-previous-image')
+          .hide();
+      }
+    }
+
+    /**
+     *
+     * @param setIDs        Sets IDs when DOM is loaded. If using a PHP counter, set to false.
+     * @param setClickAttr  Sets the attribute for the click handler.
+     */
+
+    function loadGallery(setIDs, setClickAttr) {
+      let current_image,
+        selector,
+        counter = 0;
+
+      $('#show-next-image, #show-previous-image')
+        .click(function () {
+          if ($(this)
+            .attr('id') === 'show-previous-image') {
+            current_image--;
+          } else {
+            current_image++;
+          }
+
+          selector = $('[data-image-id="' + current_image + '"]');
+          updateGallery(selector);
+        });
+
+      function updateGallery(selector) {
+        let $sel = selector;
+        current_image = $sel.data('image-id');
+        $('#image-gallery-title')
+          .text($sel.data('title'));
+        $('#image-gallery-image')
+          .attr('src', $sel.data('image'));
+        disableButtons(counter, $sel.data('image-id'));
+      }
+
+      if (setIDs == true) {
+        $('[data-image-id]')
+          .each(function () {
+            counter++;
+            $(this)
+              .attr('data-image-id', counter);
+          });
+      }
+      $(setClickAttr)
+        .on('click', function () {
+          updateGallery($(this));
+        });
+    }
+  });
+
+// build key actions
+$(document)
+  .keydown(function (e) {
+    switch (e.which) {
+      case 37: // left
+        if ((modalId.data('bs.modal') || {})._isShown && $('#show-previous-image').is(":visible")) {
+          $('#show-previous-image')
+            .click();
+        }
+        break;
+
+      case 39: // right
+        if ((modalId.data('bs.modal') || {})._isShown && $('#show-next-image').is(":visible")) {
+          $('#show-next-image')
+            .click();
+        }
+        break;
+
+      default:
+        return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+  });
+
+
+// Contact form 7
+
+
+
+
+function recaptchaCallback() {
+  $('.btn').removeAttr('disabled');
+}
+
+
+const btn_send = document.querySelector("#btn-send1");
+
+
+btn_send && btn_send.addEventListener("click", e => {
+  e.preventDefault();
+
+  let full_name = document.querySelector("#name").value;
+  let email = document.querySelector("#email").value;
+  let comment = document.querySelector("#comment").value;
+  let country = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let success_message7 = document.querySelector("#success_message7");
+  let danger_message7 = document.querySelector("#danger_message7");
+
+  console.log(full_name);
+  console.log(email);
+  console.log(comment);
+  console.log(country);
+
+  const data = new FormData();
+  data.append('full_name', full_name);
+  data.append('email', email);
+  data.append('comment', comment);
+  data.append('country', country);
+  data.append('g-recaptcha-response', grecaptcha.getResponse());
+
+  console.log(data);
+
+  fetch("https://cors-anywhere.herokuapp.com/http://arize.io/assets/php/send1.php", {
+      method: 'POST',
+      body: data
+    }).then(res => {
+      console.log(res);
+      success_message7.style.display = 'block';
+    })
+    .catch(err => {
+      console.log(err);
+      danger_message7.style.display = 'block';
+    });
+})
+
+///Rendering Creators based on Firabase data
+
+let usersObject;
+
+firebase.database()
+  .ref('Users')
+  .orderByChild('User_isCreator')
+  .equalTo('True')
+  .once('value')
+  .then(res => {
+    usersObject = res.val();
+  })
+  .catch(err => console.log(err))
+
+setTimeout(function () {
+  let usersArray = Object.values(usersObject)
+
+  let user = `
+${usersArray.map(profile => {
+  
+  
+  let profileImageUrl = `http://triplee.info/Triple_E_Social/ProfilePictures/${profile.User_ID}.jpg` ||  "http://triplee.info/Triple_E_Social/ProfilePictures/s1FBuTKhibO5sS7KPrpPPtDRGz72.jpg";
+  
+  profileImageUrl = profileImageUrl.replace(/\s+/g, '');
+
+  
+  return (
+  ` <div class="col-md-3 creatorCard">
+    <a href="profile.html" data = ${profile.User_ID}>
+           <div class="creator">
+             <div class="header">
+             <img src=${profileImageUrl} alt="">
+             </div>
+             <div class="Ocean">
+              <div class=" Coral">
+                 <div><span class="Coralwave1"></span><span class="Coralwave2"></span><span class="Coralwave3"></span>
+                 </div>
+               </div>
+             </div>
+             <div class="body">
+               <p>${profile.User_FullName}</p>
+            
+               <div class="hashtags">
+                 <p>${profile.User_Skills}</p>
+               </div>
+             </div>
+           </div>
+       </a>
+    </div>`)
+}).join('')}
+`;
+
+  let creatorCardDeck = document.querySelector(".creatorCardDeck");
+  creatorCardDeck.innerHTML = user;
+
+
+}, 3000)
+
+
+// Artists list expand
+setTimeout(function () {
+  $(function () {
+    $(".creatorCard").slice(0, 4).show();
+    $("#more").click(function (e) {
+      e.preventDefault();
+      $(".creatorCard:hidden").slice(0, 8).slideDown();
+      $("#more").hide();
+      $("#less").show();
+    });
+    $("#less").click(function (e) {
+      e.preventDefault();
+      $(".creatorCard").slice(0, 4).show();
+      $(".creatorCard").slice(4, 12).slideUp();
+      $("#more").show();
+      $("#less").hide();
+    });
+  });
+}, 3000)
+
+
+///Rendering Creator's Profile page based on Firabase data
+
+let creatorCard = document.querySelectorAll('.creatorCard');
+let uderId;
+
+for (let i = 0; i < creatorCard.length; i++) {
+
+  creatorCard[i].onclick = getProfileId;
+
+
+  function getProfileId() {
+
+    return uderId = getAttribute('data');
+  }
+  console.log(uderId);
+
+
+}
+
+
+// let userObject;
+
+// firebase.database()
+//   .ref('Users' + User_ID)
+//   .once('value')
+//   .then(res => {
+//     userObject = res.val();
+//     console.log(userObject)
+//   })
+//   .catch(err => console.log(err))
+
+// let userArray = Object.values(userObject);
+// console.log(userArray);
