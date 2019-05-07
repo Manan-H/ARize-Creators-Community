@@ -104,7 +104,7 @@
         <div class="col-md-3">
 
           <div class="creator">
-            <div class="header">
+            <!-- <div class="header">
               <img src="images/designer.jpg" alt="">
             </div>
             <div class="Ocean">
@@ -125,7 +125,7 @@
                 <p>#3d #tiltbrush #zetbrush</p>
               </div>
 
-            </div>
+            </div> -->
           </div>
 
           <div class="sideBar">
@@ -334,12 +334,13 @@
           </div>
 
           <div class="row artworks">
-            <div class="col-md-12">
-              <h2 class="profileH2">Artworks</h2>
-            </div>
-
             <div class="row">
-              <div class=" col-lg-3 thumb">
+              <div class="col-md-12">
+                <h2 class="profileH2">Artworks</h2>
+              </div>
+            </div>
+            <div class="row artworks-body">
+              <!-- <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork1"
                   data-image="images/profile1/1.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/1.png" alt="Artwork1">
@@ -364,89 +365,102 @@
                   <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
                 </a>
               </div>
-            </div>
 
-            <div class="row">
+              <div class="clearfix visible-lg-block"></div>
+
+
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork5"
                   data-image="images/profile1/1.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/1.png" alt="Another alt text">
                 </a>
               </div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork6"
                   data-image="images/profile1/2.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/2.png" alt="Another alt text">
                 </a>
               </div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork7"
                   data-image="images/profile1/3.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/3.png" alt="Another alt text">
                 </a>
               </div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork8"
                   data-image="images/profile1/4.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
                 </a>
               </div>
-            </div>
 
-            <div class="row">
+              <div class="clearfix visible-lg-block"></div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork9"
                   data-image="images/profile1/1.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/1.png" alt="Another alt text">
                 </a>
               </div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork10"
                   data-image="images/profile1/3.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/3.png" alt="Another alt text">
                 </a>
               </div>
+
               <div class=" col-lg-3 thumb">
                 <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork11"
                   data-image="images/profile1/4.png" data-target="#image-gallery">
                   <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
                 </a>
+              </div> -->
+
+              <div class="masonry">
+
+
+
+
               </div>
             </div>
-          </div>
 
 
-          <div class="modal fade" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="image-gallery-title"></h4>
-                  <button type="button" class="close arworks-modal-close" data-dismiss="modal"><span
-                      aria-hidden="true">×</span><span class="sr-only">Close</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <img id="image-gallery-image" class="img-responsive col-md-12" src="">
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i
-                      class="fa fa-arrow-left"></i>
-                  </button>
+            <div class="modal fade" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="image-gallery-title"></h4>
+                    <button type="button" class="close arworks-modal-close" data-dismiss="modal"><span
+                        aria-hidden="true">×</span><span class="sr-only">Close</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <img id="image-gallery-image" class="img-responsive col-md-12" src="">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i
+                        class="fa fa-arrow-left"></i>
+                    </button>
 
-                  <button type="button" id="show-next-image" class="btn btn-secondary float-right"><i
-                      class="fa fa-arrow-right"></i>
-                  </button>
+                    <button type="button" id="show-next-image" class="btn btn-secondary float-right"><i
+                        class="fa fa-arrow-right"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
+
             </div>
 
           </div>
 
         </div>
-
       </div>
-    </div>
     </div>
 
     </div>
@@ -590,8 +604,25 @@
     </div>
   </div>
 
-
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyA4P7nIe0blTqY85RcPEI_fNVpJBbbODMc",
+      authDomain: "tripleearplatform.firebaseapp.com",
+      databaseURL: "https://tripleearplatform.firebaseio.com",
+      projectId: "tripleearplatform",
+      storageBucket: "tripleearplatform.appspot.com",
+      messagingSenderId: "613545864525"
+    };
+    firebase.initializeApp(config);
   </script>
+
+
+
   <!-- Vendor-JS -->
   <script src="js/vendor/jquery-1.12.4.min.js"></script>
   <script src="js/vendor/bootstrap.min.js"></script>
@@ -602,13 +633,18 @@
   <script src="js/scrollUp.min.js"></script>
   <script src="js/magnific-popup.min.js"></script>
   <script src="js/wow.min.js"></script>
-  <!-- Main-active-JS -->
-  <script src="js/main.js"></script>
+
   <!-- Recaptcha -->
   <script src='https://www.google.com/recaptcha/api.js'></script>
 
   <!-- Subscribe -->
   <script src="js/subscribe.js"></script>
+
+  <!-- Masonry -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
+  <!-- Main-active-JS -->
+  <script src="js/main.js"></script>
 </body>
 
 </html>

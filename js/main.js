@@ -275,6 +275,302 @@ if (window.location.pathname === "/" || window.location.pathname === "/index.htm
 
 
 
+// Contact form 7
+
+function recaptchaCallback() {
+  $('.btn').removeAttr('disabled');
+}
+
+
+const btn_send = document.querySelector("#btn-send1");
+
+
+btn_send && btn_send.addEventListener("click", e => {
+  e.preventDefault();
+
+  let full_name = document.querySelector("#name").value;
+  let email = document.querySelector("#email").value;
+  let comment = document.querySelector("#comment").value;
+  let country = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let success_message7 = document.querySelector("#success_message7");
+  let danger_message7 = document.querySelector("#danger_message7");
+
+  console.log(full_name);
+  console.log(email);
+  console.log(comment);
+  console.log(country);
+
+  const data = new FormData();
+  data.append('full_name', full_name);
+  data.append('email', email);
+  data.append('comment', comment);
+  data.append('country', country);
+  data.append('g-recaptcha-response', grecaptcha.getResponse());
+
+  console.log(data);
+
+  fetch("https://cors-anywhere.herokuapp.com/http://arize.io/assets/php/send1.php", {
+      method: 'POST',
+      body: data
+    }).then(res => {
+      console.log(res);
+      success_message7.style.display = 'block';
+    })
+    .catch(err => {
+      console.log(err);
+      danger_message7.style.display = 'block';
+    });
+})
+
+
+///Rendering Creators based on Firabase data
+
+firebase.database()
+  .ref('Users')
+  .orderByChild('User_isCreator')
+  .equalTo('True')
+  .once('value')
+  .then(res => {
+    let usersObject = res.val();
+    successCallbackMain(usersObject);
+  })
+  .catch(err => console.log(err))
+
+
+
+function successCallbackMain(x) {
+  let usersArray = Object.values(x)
+
+  let user = `
+${usersArray.map(profile => {
+  
+  let profileImageUrl = `http://triplee.info/Triple_E_Social/ProfilePictures/${profile.User_ID}.jpg`;
+  
+  return (
+  ` <div class="col-md-3 creatorCard">
+    <a href="/profile.html" data = ${profile.User_ID}>
+           <div class="creator">
+             <div class="header">
+             <img src=${profileImageUrl} alt="">
+             </div>
+             <div class="Ocean">
+              <div class=" Coral">
+                 <div><span class="Coralwave1"></span><span class="Coralwave2"></span><span class="Coralwave3"></span>
+                 </div>
+               </div>
+             </div>
+             <div class="body">
+               <p>${profile.User_FullName}</p>
+            
+               <div class="hashtags">
+                 <p>${profile.User_Skills}</p>
+               </div>
+             </div>
+           </div>
+       </a>
+    </div>`)
+}).join('')}
+`;
+
+
+
+  let creatorCardDeck = document.querySelector(".creatorCardDeck");
+  if (creatorCardDeck) {
+    creatorCardDeck.innerHTML = user;
+  }
+
+
+  // Artists list expand
+
+  $(function () {
+    $(".creatorCard").slice(0, 4).show();
+    $("#more").click(function (e) {
+      e.preventDefault();
+      $(".creatorCard:hidden").slice(0, 8).slideDown();
+      $("#more").hide();
+      $("#less").show();
+    });
+    $("#less").click(function (e) {
+      e.preventDefault();
+      $(".creatorCard").slice(0, 4).show();
+      $(".creatorCard").slice(4, 12).slideUp();
+      $("#more").show();
+      $("#less").hide();
+    });
+  });
+
+
+  ///Rendering Creator's Profile page based on Firabase data
+
+  let creatorCards = document.querySelectorAll(".creatorCard");
+
+
+  for (let i = 0; i < creatorCards.length; i++) {
+    creatorCards[i].addEventListener('click', (e) => {
+
+      localStorage.setItem("id", usersArray[i].User_ID);
+      showProfile();
+    })
+
+  }
+
+}
+
+if (window.location.href == "http://arizecreator/profile.html") {
+  showProfile();
+}
+
+
+function showProfile() {
+
+  let userId = localStorage.getItem("id");
+  firebase.database()
+    .ref('Users/' + userId)
+    .once('value')
+    .then(res => {
+      let creatorData = res.val();
+      successCallbackProfile(creatorData)
+    })
+    .catch(err => console.log(err))
+
+}
+
+function successCallbackProfile(creatorData) {
+
+
+  let profileImageUrl = `http://triplee.info/Triple_E_Social/ProfilePictures/${creatorData.User_ID}.jpg`;
+  let socialLinksObject = creatorData.User_SocialLinks;
+
+
+  let socialLinksBlock = `${Object.keys(socialLinksObject).map(function(key) {
+  
+  let value = socialLinksObject[key];
+  key = key.toLowerCase();
+  return (`
+  <a href= ${value} target="_blank"><i class="fa fa-${key} fa-2x" aria-hidden="true"></i>
+  </a>
+  `);
+}).join('')
+}`
+
+
+  let creatorDescription = `<div class="header">
+  <img src=${profileImageUrl} alt="">
+</div>
+<div class="Ocean">
+  <div class=" Coral">
+    <div><span class="Coralwave1"></span><span class="Coralwave2"></span><span class="Coralwave3"></span>
+    </div>
+  </div>
+</div>
+<div class="body">
+  <p>${creatorData.User_FullName}</p>
+  <div class="social">
+  </div>
+  <div class="hashtags">
+    <p>${creatorData.User_Skills}</p>
+  </div>
+
+</div>`
+
+  let creator = document.querySelector(".creator");
+  creator.innerHTML = creatorDescription;
+
+  let socialDiv = document.querySelector(".social");
+  if (socialDiv) {
+    socialDiv.innerHTML = socialLinksBlock;
+  }
+}
+
+///Rendering Creator's Posts on Profile page based on Firabase data
+
+
+
+var grid = document.querySelector('.grid');
+
+var msnry = new Masonry(grid, {
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true
+});
+
+imagesLoaded(grid).on('progress', function () {
+  // layout Masonry after each image loads
+  msnry.layout();
+});
+
+
+
+firebase.database()
+  .ref('Posts')
+  .orderByChild('PostAuthorID')
+  .equalTo('zFodTuG0dmOQgPw0VyHcSWI9NX63')
+  .once('value')
+  .then(res => {
+    let userPosts = res.val();
+    successCallbackPosts(userPosts);
+  })
+  .catch(err => console.log(err))
+
+
+
+function successCallbackPosts(userPosts) {
+
+  let postsArray = Object.values(userPosts);
+  console.log(postsArray);
+
+  let postItem = 1;
+
+  postsArray.sort(function (a, b) {
+    var c = new Date(a.DateTime);
+    var d = new Date(b.DateTime);
+    return c - d;
+  }).reverse();
+
+
+  console.log(postsArray);
+
+  let userArtworks = `
+
+${postsArray.map(post => {
+
+
+  if(postItem && postItem%4 == 0){
+    clearFix = `clearfix visible-lg-block`
+  }else clearFix = ""
+
+  let dataTitle = "Artwork" + postItem;
+  let postImage = "http://triplee.info/Triple_E_WebService/AllImageTargets/" + post.ARTargetName + ".jpg";
+
+  postItem++;
+
+
+//   return(
+//   ` < div class = " col-lg-3 thumb" >
+    //   <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork1"
+    //     data-image="images/profile1/2.png" data-target="#image-gallery">
+    //     <img class="img-thumbnail" src="images/profile1/2.png" alt="Artwork1">
+    //   </a>
+    // </div>
+    //   `)
+
+    // return (`<div class = "col-lg-3 align-self-center thumb"><a href="#" class="thumbnail" data-image-id="" data-toggle="modal" data-title=${dataTitle} data-image=${postImage} data-target="#image-gallery"><img src=${postImage}  class = "img-thumbnail" alt=${dataTitle}/><img class="img-thumbnail" src=${postImage} alt=${dataTitle}></a></div>
+    // <div class=${clearFix}></div>`)
+
+    return (`<div class="item"><img src=${postImage} /></div>`)
+
+
+
+}).join("")
+}
+`
+
+  let artworksBody = document.querySelector(".masonry");
+  artworksBody.innerHTML = userArtworks
+
+}
+
+
 ///////Artworks modal
 
 let modalId = $('#image-gallery');
@@ -310,11 +606,14 @@ $(document)
 
       $('#show-next-image, #show-previous-image')
         .click(function () {
+
           if ($(this)
             .attr('id') === 'show-previous-image') {
+            console.log($(this).attr('id'));
             current_image--;
           } else {
             current_image++;
+            console.log($(this).attr('id'));
           }
 
           selector = $('[data-image-id="' + current_image + '"]');
@@ -369,168 +668,3 @@ $(document)
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
   });
-
-
-// Contact form 7
-
-
-
-
-function recaptchaCallback() {
-  $('.btn').removeAttr('disabled');
-}
-
-
-const btn_send = document.querySelector("#btn-send1");
-
-
-btn_send && btn_send.addEventListener("click", e => {
-  e.preventDefault();
-
-  let full_name = document.querySelector("#name").value;
-  let email = document.querySelector("#email").value;
-  let comment = document.querySelector("#comment").value;
-  let country = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  let success_message7 = document.querySelector("#success_message7");
-  let danger_message7 = document.querySelector("#danger_message7");
-
-  console.log(full_name);
-  console.log(email);
-  console.log(comment);
-  console.log(country);
-
-  const data = new FormData();
-  data.append('full_name', full_name);
-  data.append('email', email);
-  data.append('comment', comment);
-  data.append('country', country);
-  data.append('g-recaptcha-response', grecaptcha.getResponse());
-
-  console.log(data);
-
-  fetch("https://cors-anywhere.herokuapp.com/http://arize.io/assets/php/send1.php", {
-      method: 'POST',
-      body: data
-    }).then(res => {
-      console.log(res);
-      success_message7.style.display = 'block';
-    })
-    .catch(err => {
-      console.log(err);
-      danger_message7.style.display = 'block';
-    });
-})
-
-///Rendering Creators based on Firabase data
-
-let usersObject;
-
-firebase.database()
-  .ref('Users')
-  .orderByChild('User_isCreator')
-  .equalTo('True')
-  .once('value')
-  .then(res => {
-    usersObject = res.val();
-  })
-  .catch(err => console.log(err))
-
-setTimeout(function () {
-  let usersArray = Object.values(usersObject)
-
-  let user = `
-${usersArray.map(profile => {
-  
-  
-  let profileImageUrl = `http://triplee.info/Triple_E_Social/ProfilePictures/${profile.User_ID}.jpg` ||  "http://triplee.info/Triple_E_Social/ProfilePictures/s1FBuTKhibO5sS7KPrpPPtDRGz72.jpg";
-  
-  profileImageUrl = profileImageUrl.replace(/\s+/g, '');
-
-  
-  return (
-  ` <div class="col-md-3 creatorCard">
-    <a href="profile.html" data = ${profile.User_ID}>
-           <div class="creator">
-             <div class="header">
-             <img src=${profileImageUrl} alt="">
-             </div>
-             <div class="Ocean">
-              <div class=" Coral">
-                 <div><span class="Coralwave1"></span><span class="Coralwave2"></span><span class="Coralwave3"></span>
-                 </div>
-               </div>
-             </div>
-             <div class="body">
-               <p>${profile.User_FullName}</p>
-            
-               <div class="hashtags">
-                 <p>${profile.User_Skills}</p>
-               </div>
-             </div>
-           </div>
-       </a>
-    </div>`)
-}).join('')}
-`;
-
-  let creatorCardDeck = document.querySelector(".creatorCardDeck");
-  creatorCardDeck.innerHTML = user;
-
-
-}, 3000)
-
-
-// Artists list expand
-setTimeout(function () {
-  $(function () {
-    $(".creatorCard").slice(0, 4).show();
-    $("#more").click(function (e) {
-      e.preventDefault();
-      $(".creatorCard:hidden").slice(0, 8).slideDown();
-      $("#more").hide();
-      $("#less").show();
-    });
-    $("#less").click(function (e) {
-      e.preventDefault();
-      $(".creatorCard").slice(0, 4).show();
-      $(".creatorCard").slice(4, 12).slideUp();
-      $("#more").show();
-      $("#less").hide();
-    });
-  });
-}, 3000)
-
-
-///Rendering Creator's Profile page based on Firabase data
-
-let creatorCard = document.querySelectorAll('.creatorCard');
-let uderId;
-
-for (let i = 0; i < creatorCard.length; i++) {
-
-  creatorCard[i].onclick = getProfileId;
-
-
-  function getProfileId() {
-
-    return uderId = getAttribute('data');
-  }
-  console.log(uderId);
-
-
-}
-
-
-// let userObject;
-
-// firebase.database()
-//   .ref('Users' + User_ID)
-//   .once('value')
-//   .then(res => {
-//     userObject = res.val();
-//     console.log(userObject)
-//   })
-//   .catch(err => console.log(err))
-
-// let userArray = Object.values(userObject);
-// console.log(userArray);
