@@ -274,60 +274,11 @@ if (window.location.pathname === "/" || window.location.pathname === "/index.htm
 }());
 
 
-
-// Contact form 7
-
-function recaptchaCallback() {
-  $('.btn').removeAttr('disabled');
-}
-
-
-const btn_send = document.querySelector("#btn-send1");
-
-
-btn_send && btn_send.addEventListener("click", e => {
-  e.preventDefault();
-
-  let full_name = document.querySelector("#name").value;
-  let email = document.querySelector("#email").value;
-  let comment = document.querySelector("#comment").value;
-  let country = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  let success_message7 = document.querySelector("#success_message7");
-  let danger_message7 = document.querySelector("#danger_message7");
-
-  console.log(full_name);
-  console.log(email);
-  console.log(comment);
-  console.log(country);
-
-  const data = new FormData();
-  data.append('full_name', full_name);
-  data.append('email', email);
-  data.append('comment', comment);
-  data.append('country', country);
-  data.append('g-recaptcha-response', grecaptcha.getResponse());
-
-  console.log(data);
-
-  fetch("https://cors-anywhere.herokuapp.com/http://arize.io/assets/php/send1.php", {
-      method: 'POST',
-      body: data
-    }).then(res => {
-      console.log(res);
-      success_message7.style.display = 'block';
-    })
-    .catch(err => {
-      console.log(err);
-      danger_message7.style.display = 'block';
-    });
-})
-
-
 ///Rendering Creators based on Firabase data
 
 firebase.database()
   .ref('Users')
-  .orderByChild('User_isCreator')
+  .orderByChild('User_IsCreator')
   .equalTo('True')
   .once('value')
   .then(res => {
@@ -348,7 +299,7 @@ ${usersArray.map(profile => {
   
   return (
   ` <div class="col-md-3 creatorCard">
-    <a href="/profile.html" data = ${profile.User_ID}>
+    <a href="/profile.html?id=${profile.User_ID}" data = ${profile.User_ID}>
            <div class="creator">
              <div class="header">
              <img src=${profileImageUrl} alt="">
@@ -404,11 +355,12 @@ ${usersArray.map(profile => {
 
   let creatorCards = document.querySelectorAll(".creatorCard");
 
-
   for (let i = 0; i < creatorCards.length; i++) {
     creatorCards[i].addEventListener('click', (e) => {
 
       localStorage.setItem("id", usersArray[i].User_ID);
+      localStorage.setItem("fullName", usersArray[i].User_FullName);
+      localStorage.setItem("email", usersArray[i].User_Email);
       showProfile();
     })
 
@@ -416,14 +368,15 @@ ${usersArray.map(profile => {
 
 }
 
-if (window.location.href == "http://arizecreator/profile.html") {
+if (window.location.pathname == "/profile.html") {
   showProfile();
 }
 
 
+
 function showProfile() {
 
-  let userId = localStorage.getItem("id");
+  let userId = document.location.search.substring(4);
   firebase.database()
     .ref('Users/' + userId)
     .once('value')
@@ -437,22 +390,30 @@ function showProfile() {
 
 function successCallbackProfile(creatorData) {
 
-
   let profileImageUrl = `http://triplee.info/Triple_E_Social/ProfilePictures/${creatorData.User_ID}.jpg`;
   let socialLinksObject = creatorData.User_SocialLinks;
 
 
   let socialLinksBlock = `${Object.keys(socialLinksObject).map(function(key) {
-  
+  let iconImage = "";
   let value = socialLinksObject[key];
   key = key.toLowerCase();
-  return (`
-  <a href= ${value} target="_blank"><i class="fa fa-${key} fa-2x" aria-hidden="true"></i>
-  </a>
-  `);
+  
+  (key == "googlepoly") ? (iconImage="<img src='images/poly-bw.jpg' class='iconImage' />") : console.log("");
+  (key == "sketchfab") ? (iconImage="<img src='images/sketchfab.jpg' class='iconImage' />") : console.log("");
+  (!(key == "googlepoly" || key == "sketchfab")) ? (iconImage = "") : console.log("");
+
+if(value){
+  return (` <a href = ${value}  target = "_blank"> ${iconImage} <i class = "fa fa-${key} fa-2x" aria - hidden = "true" > </i> </a>
+    `);
+}else return null;
+  
 }).join('')
 }`
 
+
+  // let creatorBio = creatorData.User_Bio.split(" ").slice(0, 20).join(" ");
+  // let creatorSkills = creatorData.User_Skills.split(" ").slice(0, 8).join(" ");
 
   let creatorDescription = `<div class="header">
   <img src=${profileImageUrl} alt="">
@@ -465,6 +426,9 @@ function successCallbackProfile(creatorData) {
 </div>
 <div class="body">
   <p>${creatorData.User_FullName}</p>
+  <div class="bio">
+  <p>${creatorData.User_Bio}</p>
+  </div>
   <div class="social">
   </div>
   <div class="hashtags">
@@ -484,27 +448,12 @@ function successCallbackProfile(creatorData) {
 
 ///Rendering Creator's Posts on Profile page based on Firabase data
 
-
-
-var grid = document.querySelector('.grid');
-
-var msnry = new Masonry(grid, {
-  itemSelector: '.grid-item',
-  columnWidth: '.grid-sizer',
-  percentPosition: true
-});
-
-imagesLoaded(grid).on('progress', function () {
-  // layout Masonry after each image loads
-  msnry.layout();
-});
-
-
+let userId = document.location.search.substring(4);
 
 firebase.database()
   .ref('Posts')
   .orderByChild('PostAuthorID')
-  .equalTo('zFodTuG0dmOQgPw0VyHcSWI9NX63')
+  .equalTo(userId)
   .once('value')
   .then(res => {
     let userPosts = res.val();
@@ -516,10 +465,16 @@ firebase.database()
 
 function successCallbackPosts(userPosts) {
 
-  let postsArray = Object.values(userPosts);
-  console.log(postsArray);
 
-  let postItem = 1;
+
+  let postsArray;
+  if (!userPosts) {
+    document.querySelector(".noPosts").style.display = "block";
+  } else {
+    postsArray = Object.values(userPosts);
+  }
+
+
 
   postsArray.sort(function (a, b) {
     var c = new Date(a.DateTime);
@@ -527,144 +482,129 @@ function successCallbackPosts(userPosts) {
     return c - d;
   }).reverse();
 
+  let postsArraySplitted = postsArray.slice(0, 10);
 
-  console.log(postsArray);
-
-  let userArtworks = `
-
-${postsArray.map(post => {
+  let userArtworks = "";
 
 
-  if(postItem && postItem%4 == 0){
-    clearFix = `clearfix visible-lg-block`
-  }else clearFix = ""
-
-  let dataTitle = "Artwork" + postItem;
-  let postImage = "http://triplee.info/Triple_E_WebService/AllImageTargets/" + post.ARTargetName + ".jpg";
-
-  postItem++;
-
-
-//   return(
-//   ` < div class = " col-lg-3 thumb" >
-    //   <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork1"
-    //     data-image="images/profile1/2.png" data-target="#image-gallery">
-    //     <img class="img-thumbnail" src="images/profile1/2.png" alt="Artwork1">
-    //   </a>
-    // </div>
-    //   `)
-
-    // return (`<div class = "col-lg-3 align-self-center thumb"><a href="#" class="thumbnail" data-image-id="" data-toggle="modal" data-title=${dataTitle} data-image=${postImage} data-target="#image-gallery"><img src=${postImage}  class = "img-thumbnail" alt=${dataTitle}/><img class="img-thumbnail" src=${postImage} alt=${dataTitle}></a></div>
-    // <div class=${clearFix}></div>`)
-
-    return (`<div class="item"><img src=${postImage} /></div>`)
+  var $grid = $('.grid').masonry({
+    itemSelector: '.grid-item',
+    percentPosition: true,
+    columnWidth: '.grid-sizer',
+    transitionDuration: '3s'
+  });
+  // layout Masonry after each image loads
+  $grid.imagesLoaded().progress(function () {
+    $grid.masonry('layout');
+  });
 
 
 
-}).join("")
-}
-`
-
-  let artworksBody = document.querySelector(".masonry");
-  artworksBody.innerHTML = userArtworks
-
-}
+  function loadImages(someArray) {
 
 
-///////Artworks modal
 
-let modalId = $('#image-gallery');
+    let artworksBody = $(".grid");
+    userArtworks = `
 
-$(document)
-  .ready(function () {
+      ${someArray.map(post => {
 
-    loadGallery(true, 'a.thumbnail');
+        let postImage = "http://triplee.info/Triple_E_WebService/AllImageTargets/" + post.ARTargetName + ".jpg";
 
-    //This function disables buttons when needed
-    function disableButtons(counter_max, counter_current) {
-      $('#show-previous-image, #show-next-image')
-        .show();
-      if (counter_max === counter_current) {
-        $('#show-next-image')
-          .hide();
-      } else if (counter_current === 1) {
-        $('#show-previous-image')
-          .hide();
+        let gridItem = document.createElement('div');
+        gridItem.className = "grid-item";
+        gridItem.innerHTML = `<img src=${postImage} onerror="this.src='https://is2-ssl.mzstatic.com/image/thumb/Purple113/v4/67/9f/1c/679f1cff-dba9-3950-ca7f-4af353a76091/source/512x512bb.jpg';" data-image-id="" data-toggle="modal" data-image="" data-target="#image-gallery" />`;
+
+        artworksBody.append(gridItem);
+          return  artworksBody.masonry("reloadItems").delay(500).masonry("layout");
+      }).join("")
       }
-    }
+      `;
 
-    /**
-     *
-     * @param setIDs        Sets IDs when DOM is loaded. If using a PHP counter, set to false.
-     * @param setClickAttr  Sets the attribute for the click handler.
-     */
+  }
 
-    function loadGallery(setIDs, setClickAttr) {
-      let current_image,
-        selector,
-        counter = 0;
+  loadImages(postsArraySplitted);
 
-      $('#show-next-image, #show-previous-image')
-        .click(function () {
+  let shownImages = 10;
+  $(window).bind('scroll', function () {
+    if ($(window).scrollTop() >= $('.artworks-body').offset().top + $('.artworks-body').outerHeight() - window.innerHeight) {
 
-          if ($(this)
-            .attr('id') === 'show-previous-image') {
-            console.log($(this).attr('id'));
-            current_image--;
-          } else {
-            current_image++;
-            console.log($(this).attr('id'));
-          }
-
-          selector = $('[data-image-id="' + current_image + '"]');
-          updateGallery(selector);
-        });
-
-      function updateGallery(selector) {
-        let $sel = selector;
-        current_image = $sel.data('image-id');
-        $('#image-gallery-title')
-          .text($sel.data('title'));
-        $('#image-gallery-image')
-          .attr('src', $sel.data('image'));
-        disableButtons(counter, $sel.data('image-id'));
-      }
-
-      if (setIDs == true) {
-        $('[data-image-id]')
-          .each(function () {
-            counter++;
-            $(this)
-              .attr('data-image-id', counter);
-          });
-      }
-      $(setClickAttr)
-        .on('click', function () {
-          updateGallery($(this));
-        });
+      console.log(`shown: ${shownImages} length: ${postsArray.length}`)
+      if (postsArray.length > shownImages) {
+        shownImages += 10;
+        console.log(shownImages);
+        postsArraySplitted = postsArray.slice(shownImages - 10, shownImages);
+        loadImages(postsArraySplitted);
+        console.log(`loaded ${shownImages}`)
+      } else console.log("that's all")
     }
   });
 
-// build key actions
-$(document)
-  .keydown(function (e) {
-    switch (e.which) {
-      case 37: // left
-        if ((modalId.data('bs.modal') || {})._isShown && $('#show-previous-image').is(":visible")) {
-          $('#show-previous-image')
-            .click();
-        }
-        break;
+  function showPostModal() {
+    let postCards = document.querySelectorAll(".grid img");
 
-      case 39: // right
-        if ((modalId.data('bs.modal') || {})._isShown && $('#show-next-image').is(":visible")) {
-          $('#show-next-image')
-            .click();
-        }
-        break;
+    let modalImage = document.querySelector("#image-gallery-image");
 
-      default:
-        return; // exit this handler for other keys
+    for (let i = 0; i < postCards.length; i++) {
+
+      postCards[i].addEventListener("click", function (e) {
+        e.preventDefault();
+        modalImage.src = this.src;
+      });
+
     }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
-  });
+
+  }
+
+  showPostModal();
+
+}
+
+// Contact form 7
+
+function recaptchaCallback() {
+  $('.btn').removeAttr('disabled');
+}
+
+
+const btn_send = document.querySelector("#btn-send1");
+
+
+btn_send && btn_send.addEventListener("click", e => {
+  e.preventDefault();
+
+  let full_name = document.querySelector("#name").value;
+  let email = document.querySelector("#email").value;
+  let comment = document.querySelector("#comment").value;
+  let country = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let success_message7 = document.querySelector("#success_message7");
+  let danger_message7 = document.querySelector("#danger_message7");
+  let creatorID = localStorage.getItem("id");
+  let creatorFullName = localStorage.getItem("fullName");
+  let creatorEmail = localStorage.getItem("email");
+
+
+  const data = new FormData();
+  data.append('full_name', full_name);
+  data.append('email', email);
+  data.append('comment', comment);
+  data.append('country', country);
+  data.append('g-recaptcha-response', grecaptcha.getResponse());
+  data.append('creatorID', creatorID);
+  data.append('creatorFullName', creatorFullName);
+  data.append('creatorEmail', creatorEmail);
+
+  console.log(data);
+
+  fetch("https://cors-anywhere.herokuapp.com/http://arize.io/assets/php/contactcreator.php", {
+      method: 'POST',
+      body: data
+    }).then(res => {
+      console.log(res);
+      success_message7.style.display = 'block';
+    })
+    .catch(err => {
+      console.log(err);
+      danger_message7.style.display = 'block';
+    });
+})

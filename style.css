@@ -1109,7 +1109,7 @@ input:-webkit-autofill:focus {
 .creators .creator .hashtags p {
   font-size: 12px;
   text-transform: none;
-  margin-top: 13px;
+  margin-top: 5px;
 }
 
 .Ocean {
@@ -1236,8 +1236,15 @@ input:-webkit-autofill:focus {
 }
 
 .profile .creator {
-  height: 400px;
-  width: 87%;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.profile .creator .body {
+  /* position: absolute; */
+  left: 0;
+  right: 0;
+  margin-bottom: -183px;
 }
 
 .profile .sideBar {
@@ -1246,13 +1253,16 @@ input:-webkit-autofill:focus {
   width: 87%;
 }
 
-.profile .creator .hashtags {
-  margin-top: -12px;
-}
-
 .profile .creator .hashtags p {
   font-size: 12px;
   text-transform: none;
+}
+
+.profile .creator .bio p {
+  font-size: 12px;
+  text-transform: none;
+  padding: 5px;
+  margin: 10px 5px 0;
 }
 
 .socialDisplayNone {
@@ -1269,10 +1279,16 @@ input:-webkit-autofill:focus {
   font-size: 24px;
 }
 
-/* Artworks masonry */
+.profile .creator .iconImage {
+  position: relative;
+  top: -5px;
+  left: 11px;
+}
 
-.masonry {
-  /* Masonry container */
+/* Artworks masonry */
+/* Masonry container */
+/* .masonry {
+  
   -webkit-column-count: 4;
   -moz-column-count: 4;
   column-count: 4;
@@ -1329,6 +1345,42 @@ input:-webkit-autofill:focus {
     -moz-column-count: 4;
     -webkit-column-count: 4;
     column-count: 4;
+  }
+} */
+
+/* Masonry css grid */
+
+.grid {
+  margin-bottom: 50px;
+}
+
+/* clear fix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- .grid-item ---- */
+
+.grid-sizer,
+.grid-item {
+  width: 23.333%;
+  padding: 10px;
+}
+
+.grid-item {
+  float: left;
+}
+
+.grid-item img {
+  /* display: block; */
+  max-width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+  .grid {
+    margin-left: 7%;
   }
 }
 
@@ -1417,34 +1469,7 @@ input:-webkit-autofill:focus {
   display: none;
 }
 
-/* .profile .portfolio img {
-  width: 100%;
-}
-
-.artworks {
-  margin-top: 50px;
-}
-
-.artworks .thumbnail {
-  border: none;
-}
-
-.artworks .img-thumbnail {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: none;
-  padding: 0;
-  border-radius: 0;
-}
-
-#image-gallery-image {
-  margin-bottom: 10px;
-} */
-
 @media screen and (max-width: 1999px) {
-  .profile .creator {
-    margin: 10px 6%;
-  }
-
   .profile .sideBar {
     margin: 30px 6%;
   }
@@ -1473,12 +1498,14 @@ button:active {
   margin-bottom: 15px;
 }
 
-.modal-footer {
-  border-top: none !important;
+@media (min-width: 768px) {
+  .post-modal {
+    width: 435px;
+  }
 }
 
-.arworks-modal-close {
-  margin-top: -25px !important;
+.modal-footer {
+  border-top: none !important;
 }
 
 /* Profile Slider */

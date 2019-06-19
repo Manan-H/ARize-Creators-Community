@@ -1,0 +1,26 @@
+{
+  "name": "arizecreator",
+  "version": "1.0.0",
+  "main": "imagesloaded.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "split-object": "^2.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/Manan_/arize-comunity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/Manan_/arize-comunity/issues"
+  },
+  "homepage": "https://gitlab.com/Manan_/arize-comunity#readme",
+  "description": ""
+}

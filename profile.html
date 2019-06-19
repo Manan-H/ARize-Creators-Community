@@ -3,7 +3,7 @@
 
 <head>
 
-  <title>John Smith | ARize Creators' Community (CC)</title>
+  <title>ARize Creators' Community (CC)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow">
@@ -207,7 +207,7 @@
 
 
         <div class="col-md-9 portfolio">
-          <div class="row threed-section">
+          <!-- <div class="row threed-section">
             <div class="col-md-12">
               <h2 class="profileH2">Publications</h2>
 
@@ -331,7 +331,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="row artworks">
             <div class="row">
@@ -340,99 +340,24 @@
               </div>
             </div>
             <div class="row artworks-body">
-              <!-- <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork1"
-                  data-image="images/profile1/1.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/1.png" alt="Artwork1">
-                </a>
-              </div>
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork2"
-                  data-image="images/profile1/2.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/2.png" alt="Artwork2">
-                </a>
-              </div>
+              <p class="noPosts" style="display: none;"> There are no posts yet! </p>
 
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork3"
-                  data-image="images/profile1/3.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/3.png" alt="Artwork3">
-                </a>
-              </div>
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork4"
-                  data-image="images/profile1/4.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
-                </a>
-              </div>
+              <!-- <div class="masonry">
 
-              <div class="clearfix visible-lg-block"></div>
-
-
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork5"
-                  data-image="images/profile1/1.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/1.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork6"
-                  data-image="images/profile1/2.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/2.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork7"
-                  data-image="images/profile1/3.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/3.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork8"
-                  data-image="images/profile1/4.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class="clearfix visible-lg-block"></div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork9"
-                  data-image="images/profile1/1.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/1.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork10"
-                  data-image="images/profile1/3.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/3.png" alt="Another alt text">
-                </a>
-              </div>
-
-              <div class=" col-lg-3 thumb">
-                <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Artwork11"
-                  data-image="images/profile1/4.png" data-target="#image-gallery">
-                  <img class="img-thumbnail" src="images/profile1/4.png" alt="Another alt text">
-                </a>
               </div> -->
 
-              <div class="masonry">
-
-
+              <div class="grid" style="height: 1000px;">
+                <div class="grid-sizer"></div>
 
 
               </div>
+
             </div>
 
 
             <div class="modal fade" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
               aria-hidden="true">
-              <div class="modal-dialog">
+              <div class="modal-dialog post-modal">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h4 class="modal-title" id="image-gallery-title"></h4>
@@ -441,16 +366,18 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <img id="image-gallery-image" class="img-responsive col-md-12" src="">
+                    <img id="image-gallery-image" class="img-responsive" style="max-height: 500px; margin: 0 auto;"
+                      src="">
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i
+                    <img class="img-responsive" src="images/Guideline.png">
+                    <!-- <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i
                         class="fa fa-arrow-left"></i>
                     </button>
 
                     <button type="button" id="show-next-image" class="btn btn-secondary float-right"><i
                         class="fa fa-arrow-right"></i>
-                    </button>
+                    </button> -->
                   </div>
                 </div>
               </div>
@@ -641,8 +568,14 @@
   <script src="js/subscribe.js"></script>
 
   <!-- Masonry -->
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
-  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
+  <!-- <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script> -->
+  <script src="msn.min.js"></script>
+  <!-- <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script> -->
+  <script src="imagesloaded.js"></script>
+  <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.js"></script>
+
+
+
   <!-- Main-active-JS -->
   <script src="js/main.js"></script>
 </body>
